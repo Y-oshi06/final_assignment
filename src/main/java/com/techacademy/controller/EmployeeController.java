@@ -114,13 +114,13 @@ public class EmployeeController {
     }
     //従業員更新処理
     @GetMapping(value = "/{code}/update")
-    public String getUser(@PathVariable String code,Employee employee, Model model) {
+    public String getUser(@PathVariable String code, Employee employee, Model model) {
         if(code != null) {
             model.addAttribute("employee",employeeService.findByCode(code));
         }else {
             model.addAttribute("employee",employee);
         }
-         return "update/update";
+         return "employees/update";
     }
 
     @PostMapping(value = "/{code}/update")
