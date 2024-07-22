@@ -100,9 +100,9 @@ public class EmployeeController {
 
     // 従業員削除処理
     @PostMapping(value = "/{code}/delete")
-    public String delete(@PathVariable String code,  UserDetail userDetail, Model model) {
+    public String delete(@PathVariable String code, @AuthenticationPrincipal UserDetail userDetail, Model model) {
 
-        ErrorKinds result = employeeService.delete(code@AuthenticationPrincipal , userDetail);
+        ErrorKinds result = employeeService.delete(code, userDetail);
 
         if (ErrorMessage.contains(result)) {
             model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
@@ -124,11 +124,12 @@ public class EmployeeController {
     }
 
     @PostMapping(value = "/{code}/update")
-    public String postUser(@Validated Employee employee,BindingResult res,Model model) {
+    public String postUser(@PathVariable String code,@Validated Employee employee,BindingResult res,Model model) {
         if(res.hasErrors()) {
             return getUser(null,employee,model);
         }
-        employeeService.save(employee);
+        
+        employeeService.update(code,employee);
 
         return "redirect:/employees";
     }

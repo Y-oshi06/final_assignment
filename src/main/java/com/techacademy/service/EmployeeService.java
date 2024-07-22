@@ -7,6 +7,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -68,6 +70,41 @@ public class EmployeeService {
         return ErrorKinds.SUCCESS;
     }
 
+
+
+    //従業員更新
+    @Transactional
+    public ErrorKinds update(String code,Employee employee) {
+
+
+            Optional<Employee> optionalEmployee = employeeRepository.findById(code);
+            if (optionalEmployee.isPresent()) {
+                Employee existingEmployee = optionalEmployee.get();
+
+                existingEmployee.setName(employee.getName());
+
+                if (employee.getPassword() == null || employee.getPassword().isEmpty()) {
+                    existingEmployee.setPassword(existingEmployee.getPassword());
+                    LocalDateTime now = LocalDateTime.now();
+                    existingEmployee.setUpdatedAt(now);
+                    employeeRepository.save(existingEmployee);
+                } else {
+                    ErrorKinds result = employeePasswordCheck(employee);
+                    if (ErrorKinds.CHECK_OK != result) {
+                        return result;
+                    }
+
+                    LocalDateTime now = LocalDateTime.now();
+                    employee.setUpdatedAt(now);
+                    employeeRepository.save(existingEmployee);
+                }
+
+            }
+
+        return ErrorKinds.SUCCESS;
+
+    }
+
     // 従業員一覧表示処理
     public List<Employee> findAll() {
         return employeeRepository.findAll();
@@ -118,5 +155,7 @@ public class EmployeeService {
         int passwordLength = employee.getPassword().length();
         return passwordLength < 8 || 16 < passwordLength;
     }
+
+
 
 }
