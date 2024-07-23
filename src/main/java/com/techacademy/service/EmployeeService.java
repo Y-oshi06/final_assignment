@@ -85,6 +85,7 @@ public class EmployeeService {
 
                     LocalDateTime now = LocalDateTime.now();
                     existingEmployee.setUpdatedAt(now);
+                    existingEmployee.setName(employee.getName());
 
                     employeeRepository.save(existingEmployee);
                 } else {
