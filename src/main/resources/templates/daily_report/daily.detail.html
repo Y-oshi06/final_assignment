@@ -25,7 +25,7 @@
                                 <table class="table table-striped">
                                 　　<tr>
                                         <th>日付</th>
-                                        <td class="align-middle" th:text="${employee.createdAt}"></td>
+                                        <td class="align-middle" th:text="${#temporals.format(employee.createdAt, 'yyyy-MM-dd')}"></td>
                                     </tr>
                                     <tr>
                                         <th>氏名</th>

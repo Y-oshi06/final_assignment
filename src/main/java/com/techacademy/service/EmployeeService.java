@@ -80,22 +80,25 @@ public class EmployeeService {
             Optional<Employee> optionalEmployee = employeeRepository.findById(code);
             if (optionalEmployee.isPresent()) {
                 Employee existingEmployee = optionalEmployee.get();
-
-                existingEmployee.setName(employee.getName());
-
-                if (employee.getPassword() == null || employee.getPassword().isEmpty()) {
+                if (employee.getPassword().isEmpty()) {
                     existingEmployee.setPassword(existingEmployee.getPassword());
+
                     LocalDateTime now = LocalDateTime.now();
                     existingEmployee.setUpdatedAt(now);
+
                     employeeRepository.save(existingEmployee);
                 } else {
                     ErrorKinds result = employeePasswordCheck(employee);
                     if (ErrorKinds.CHECK_OK != result) {
+                        existingEmployee.setName(employee.getName());
                         return result;
                     }
+                    existingEmployee.setName(employee.getName());
+                    existingEmployee.setRole(employee.getRole());
 
                     LocalDateTime now = LocalDateTime.now();
-                    employee.setUpdatedAt(now);
+                    existingEmployee.setUpdatedAt(now);
+
                     employeeRepository.save(existingEmployee);
                 }
 

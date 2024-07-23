@@ -28,10 +28,10 @@
                                     <tbody>
                                         <tr th:each="employee:${employeeList}">
                                             <td class="align-middle" th:text="${employee.name}"></td>
-                                          <!-- <td class="align-middle" th:text="${employee.}"></td> <!-- 未完成-->
-                                          <!--  <td class="align-middle" th:text="${employee.reports}"></td>  <!-- 未完成-->
+                                            <td class="align-middle" th:text="${#temporals.format(employee.createdAt, 'yyyy-MM-dd')}"></td>
+                                            <td class="align-middle" th:text="${employee.name}"></td>  <!-- 未完成-->
+
                                             <td class="align-middle"><a th:href="@{/reports/{code}/(code=${employee.code})}" class="btn btn-primary">詳細</a></td>
-                                            <td class="align-middle" th:text="${employee.name}"></td>
                                         </tr>
                                     </tbody>
                                 </table>

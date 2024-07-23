@@ -128,8 +128,21 @@ public class EmployeeController {
         if(res.hasErrors()) {
             return getUser(null,employee,model);
         }
-        
-        employeeService.update(code,employee);
+
+        try {
+            ErrorKinds result = employeeService.update(code,employee);
+
+            if (ErrorMessage.contains(result)) {
+                model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+                return getUser(code,employee,model);
+            }
+
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
+                    ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
+            return getUser(code,employee,model);
+        }
+
 
         return "redirect:/employees";
     }
