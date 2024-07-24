@@ -86,7 +86,7 @@ public class EmployeeService {
                     LocalDateTime now = LocalDateTime.now();
                     existingEmployee.setUpdatedAt(now);
                     existingEmployee.setName(employee.getName());
-
+                    existingEmployee.setRole(employee.getRole());
                     employeeRepository.save(existingEmployee);
                 } else {
                     ErrorKinds result = employeePasswordCheck(employee);
@@ -94,9 +94,9 @@ public class EmployeeService {
                         existingEmployee.setName(employee.getName());
                         return result;
                     }
+                    existingEmployee.setPassword(employee.getPassword());
                     existingEmployee.setName(employee.getName());
                     existingEmployee.setRole(employee.getRole());
-
                     LocalDateTime now = LocalDateTime.now();
                     existingEmployee.setUpdatedAt(now);
 
