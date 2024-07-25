@@ -23,14 +23,14 @@
                                             <th>氏名</th>
                                             <th>日付</th>
                                             <th>タイトル</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr th:each="report:${reportList}">
+                                            <td class="align-middle" th:text="${report.title}}"></td>
+                                            <td class="align-middle" th:text="${report.report_date}"></td>
                                             <td class="align-middle" th:text="${report.title}"></td>
-                                            <td class="align-middle" th:text="${report.report_data}"></td>
-                                            <td class="align-middle" th:text="${report.title}"></td>
-
                                             <td class="align-middle"><a th:href="@{/reports/{id}/(id=${report.id})}" class="btn btn-primary">詳細</a></td>
                                         </tr>
                                     </tbody>
