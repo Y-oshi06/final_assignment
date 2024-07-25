@@ -26,12 +26,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="employee:${employeeList}">
-                                            <td class="align-middle" th:text="${employee.name}"></td>
-                                            <td class="align-middle" th:text="${#temporals.format(employee.createdAt, 'yyyy-MM-dd')}"></td>
-                                            <td class="align-middle" th:text="${employee.name}"></td>  <!-- 未完成-->
+                                        <tr th:each="report:${reportList}">
+                                            <td class="align-middle" th:text="${report.title}"></td>
+                                            <td class="align-middle" th:text="${report.report_data}"></td>
+                                            <td class="align-middle" th:text="${report.title}"></td>
 
-                                            <td class="align-middle"><a th:href="@{/reports/{code}/(code=${employee.code})}" class="btn btn-primary">詳細</a></td>
+                                            <td class="align-middle"><a th:href="@{/reports/{id}/(id=${report.id})}" class="btn btn-primary">詳細</a></td>
                                         </tr>
                                     </tbody>
                                 </table>

@@ -39,7 +39,7 @@ public class ReportController {
     public String list(Model model) {
 
         model.addAttribute("listSize", reportService.findAll().size());
-        model.addAttribute("employeeList", reportService.findAll());
+        model.addAttribute("reportList", reportService.findAll());
 
         return "daily_report/daily.list";
     }
@@ -48,7 +48,7 @@ public class ReportController {
     @GetMapping(value = "/{code}/")
     public String detail(@PathVariable String code, Model model) {
 
-        model.addAttribute("employee", reportService.findByCode(code));
+     //   model.addAttribute("employee", reportService.findByCode(code));
         return "daily_report/daily.detail";
     }
 
@@ -89,7 +89,7 @@ public class ReportController {
             return getUser(null,employee,model);
         }
 
-        reportService.update(code,employee);
+//        reportService.update(code,employee);
 
         return "redirect:/reports";
     }
