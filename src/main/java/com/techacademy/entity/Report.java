@@ -43,7 +43,6 @@ public class Report {
 
     // ID
     @Id
-    @NotEmpty
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -60,6 +59,7 @@ public class Report {
 
     //内容
     @NotEmpty
+    @Length(max=600)
     private String content;
 
     // 社員番号

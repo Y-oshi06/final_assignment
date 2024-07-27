@@ -30,10 +30,6 @@ public class ReportService {
         this.reportRepository = reportRepository;
     }
 
-
-
-
-
     // 一覧表示処理
     public List<Report> findAll() {
         return reportRepository.findAll();
@@ -46,6 +42,26 @@ public class ReportService {
         // 取得できなかった場合はnullを返す
         Report report = option.orElse(null);
         return report;
+    }
+
+    //社員日報情報
+    public List<Report> findByEmployee(Employee employee) {
+        return reportRepository.findByEmployee(employee);
+    }
+
+    //日報登録
+    @Transactional
+    public ErrorKinds save(Report report) {
+
+
+        report.setDeleteFlg(false);
+        LocalDateTime now = LocalDateTime.now();
+        report.setCreatedAt(now);
+        report.setUpdatedAt(now);
+
+        reportRepository.save(report);
+        return ErrorKinds.SUCCESS;
+
     }
 
 
