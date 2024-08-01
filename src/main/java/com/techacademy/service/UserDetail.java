@@ -1,5 +1,6 @@
 package com.techacademy.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -66,4 +67,6 @@ public class UserDetail implements UserDetails {
         // 従業員が有効であればtrueを返す
         return true;
     }
+    
+    
 }

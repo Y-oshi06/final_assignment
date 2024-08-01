@@ -1,5 +1,6 @@
 package com.techacademy.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +45,7 @@ public class ReportService {
         return report;
     }
 
-    //社員日報情報
+    //社員日報情報検索
     public List<Report> findByEmployee(Employee employee) {
         return reportRepository.findByEmployee(employee);
     }
@@ -53,15 +54,31 @@ public class ReportService {
     @Transactional
     public ErrorKinds save(Report report) {
 
+            report.setDeleteFlg(false);
+            LocalDateTime now = LocalDateTime.now();
+            report.setCreatedAt(now);
+            report.setUpdatedAt(now);
 
-        report.setDeleteFlg(false);
+            reportRepository.save(report);
+            return ErrorKinds.SUCCESS;
+
+    }
+
+    //日報を書いた社員＋入力された日付の検索
+    public List<Report> findByReportDateAndEmployee(LocalDate reportDate,Employee employee){
+        return reportRepository.findByReportDateAndEmployee(reportDate,employee);
+    }
+
+
+    //日報削除
+    @Transactional
+    public ErrorKinds delete(Integer id, UserDetail userDetail) {
+        Report report = findByCode(id);
         LocalDateTime now = LocalDateTime.now();
-        report.setCreatedAt(now);
         report.setUpdatedAt(now);
+        report.setDeleteFlg(true);
 
-        reportRepository.save(report);
         return ErrorKinds.SUCCESS;
-
     }
 
 

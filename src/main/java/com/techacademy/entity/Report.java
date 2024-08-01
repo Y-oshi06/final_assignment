@@ -20,6 +20,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import jakarta.persistence.JoinColumn;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Data
 @Entity
@@ -49,6 +50,7 @@ public class Report {
     //日付
     @NotNull
     @Column(nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate reportDate;
 
     //タイトル
@@ -60,6 +62,7 @@ public class Report {
     //内容
     @NotEmpty
     @Length(max=600)
+    @Column(columnDefinition="LONGTEXT")
     private String content;
 
     // 社員番号

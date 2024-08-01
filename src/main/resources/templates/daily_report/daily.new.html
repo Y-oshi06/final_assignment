@@ -27,6 +27,7 @@
                                         <div class="col-md-7">
                                             <input class="form-control" type="date" th:field="*{reportDate}" th:errorclass="err" id="day">
                                             <span th:errors="*{reportDate}" class="text-danger"></span>
+                                            <span th:if="${reportDateError} neq null" th:text="${reportDateError}" class="text-danger"></span>
                                         </div>
                                 　　</div>
                                     <div class="mb-3">
@@ -45,10 +46,10 @@
                                         </div>
                                 　　</div>
                                    <div class="mb-3">
-                                        <label class="form-label" for="contetnt">内容</label>
+                                        <label class="form-label" for="contetnt">内容</textarea>
                                         <p class="mb-1"></p>
                                         <div class="col-md-7">
-                                            <input class="form-control" type="text" th:field="*{content}" th:errorclass="err" id="content">
+                                            <textarea class="form-control" type="text" th:field="*{content}" th:errorclass="err" id="content"></textarea>
                                             <span th:errors="*{content}" class="text-danger"></span>
                                         </div>
                                 　　</div>

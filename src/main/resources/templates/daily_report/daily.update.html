@@ -19,29 +19,38 @@
                     <div class="card">
                         <div class="card-body">
 
-                                <form method="post" th:action="@{/employees/{code}/update(code=${employee.code})}" th:object="${employee}">
+                                  <form method="post" th:action="@{/report/{id}/update(id=${report.id})}" th:object="${report}">
                                     <div class="wizard wizard-success mb-4">
 
                                     <div class="mb-3">
                                         <label class="form-label" for="day">日付</label>
                                         <p class="mb-1"></p>
-
+                                        <div class="col-md-7">
+                                            <input class="form-control" type="date" th:field="*{reportDate}"  th:errorclass="err" id="day" th:value="reportDate">
+                                            <span th:errors="*{reportDate}" class="text-danger"></span>
+                                        </div>
                                     </div>
-                                    <div class="mb-3">
+                                 <div class="mb-3">
                                         <label class="form-label" for="name">氏名</label>
                                         <p class="mb-1"></p>
                                          <div class="col-md-7">
-                                            <p class="align-middle" th:text="${employee.name}"></p>
+                                            <p class="align-middle" th:text="*{employee.name}"></p>
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="title">タイトル</label>
                                         <p class="mb-1"></p>
-
+                                        <div class="col-md-7">
+                                            <input class="form-control" type="text" th:field="*{title}" th:errorclass="err" id="title" th:value="report.title">
+                                            <span th:errors="*{title}" class="text-danger"></span>
+                                        </div>
                                     </div><div class="mb-3">
                                         <label class="form-label" for="content">内容</label>
                                         <p class="mb-1"></p>
-
+                                        <div class="col-md-7">
+                                            <input class="form-control" type="text" th:field="*{content}" th:errorclass="err" id="content" th:value="report.content">
+                                            <span th:errors="*{content}" class="text-danger"></span>
+                                        </div>
                                     </div>
 
                                     </div>
@@ -49,8 +58,6 @@
                                     <input type="submit" value="更新" class="btn btn-primary">
                                     <a th:href="@{/reports}" class="btn btn-primary">戻る</a>
                                 </form>
-
-                                <span th:if="${deleteError} neq null" th:text="${deleteError}" class="text-danger"></span>
                             </div>
 
                         </div>

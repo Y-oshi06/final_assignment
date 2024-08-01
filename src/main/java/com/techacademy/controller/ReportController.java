@@ -63,61 +63,65 @@ public class ReportController {
     // 日報新規登録処理
     @PostMapping(value = "/add")
     public String add(@Validated Report report, BindingResult res, Model model,@AuthenticationPrincipal UserDetail userDetail) {
+        //エラーチック
         if (res.hasErrors()) {
             return create(report,userDetail,model);
         }
-        
-        
-        try {
-            ErrorKinds result = reportService.save(report);
 
-            if (ErrorMessage.contains(result)) {
-                model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
-                return create(report,userDetail,model);
-            }
+        report.setEmployee(userDetail.getEmployee());
 
-        } catch (DataIntegrityViolationException e) {
-            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
-                    ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
+        List<Report> reportUser = reportService.findByReportDateAndEmployee(report.getReportDate(),userDetail.getEmployee());
+
+        if(!reportUser.isEmpty()) {
+            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DATECHECK_ERROR), ErrorMessage.getErrorValue(ErrorKinds.DATECHECK_ERROR));
+            return create(report, userDetail, model);
+        }
+
+        ErrorKinds result = reportService.save(report);
+
+        if (ErrorMessage.contains(result)) {
+            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
             return create(report,userDetail,model);
         }
 
 
-        return "redirect:/daily_report";
+        return "redirect:/reports";
     }
 
  // 日報詳細画面
     @GetMapping(value = "/{id}/")
-    public String detail(@PathVariable String code, Model model) {
+    public String detail(@PathVariable("id") Integer id, Model model) {
 
-     //   model.addAttribute("employee", reportService.findByCode(code));
+        model.addAttribute("report", reportService.findByCode(id));
         return "daily_report/daily.detail";
     }
 
     // 日報削除処理
-    @PostMapping(value = "/{code}/delete")
-    public String delete(@PathVariable String code, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+    @PostMapping(value = "/{id}/delete")
+    public String delete(@PathVariable Integer id, @AuthenticationPrincipal UserDetail userDetail, Model model) {
 
+        ErrorKinds result = reportService.delete(id,userDetail);
 
-
-        return "redirect:/daily_report";
-    }
-    //日報更新処理
-    @GetMapping(value = "/{code}/update")
-    public String getUser(@PathVariable String code, Employee employee, Model model) {
-
-         return "daily_report/daily.update";
-    }
-
-    @PostMapping(value = "/{code}/update")
-    public String postUser(@PathVariable String code,@Validated Employee employee,BindingResult res,Model model) {
-        if(res.hasErrors()) {
-            return getUser(null,employee,model);
+        if (ErrorMessage.contains(result)) {
+            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+            model.addAttribute("report", reportService.findByCode(id));
+            return detail(id, model);
         }
 
-//        reportService.update(code,employee);
 
         return "redirect:/reports";
     }
+
+    //日報更新
+    @GetMapping(value = "/{id}/update")
+    public String getReport(@PathVariable Integer id, Report report, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+       // if(id != null) {
+
+           model.addAttribute("report",reportService.findByCode(id));
+           model.addAttribute("userDetail",userDetail.getEmployee());
+
+        return "daily_report/daily.update";
+    }
+
 
 }
