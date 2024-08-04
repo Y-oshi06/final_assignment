@@ -12,5 +12,4 @@ public interface ReportRepository extends JpaRepository<Report, Integer> {
 
     public List<Report> findByEmployee(Employee employee);
     public List<Report> findByReportDateAndEmployee(LocalDate reportDate,Employee employee);
-    
 }

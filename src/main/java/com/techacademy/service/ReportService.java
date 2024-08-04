@@ -9,11 +9,13 @@ import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.techacademy.constants.ErrorKinds;
+import com.techacademy.constants.ErrorMessage;
 import com.techacademy.entity.Employee;
 import com.techacademy.entity.Report;
 import com.techacademy.repository.EmployeeRepository;
@@ -72,7 +74,7 @@ public class ReportService {
 
     //日報削除
     @Transactional
-    public ErrorKinds delete(Integer id, UserDetail userDetail) {
+    public ErrorKinds delete(Integer id) {
         Report report = findByCode(id);
         LocalDateTime now = LocalDateTime.now();
         report.setUpdatedAt(now);
@@ -80,6 +82,40 @@ public class ReportService {
 
         return ErrorKinds.SUCCESS;
     }
+
+    //日報更新
+    @Transactional
+    public ErrorKinds update(Report report,UserDetail userDetail,Integer id) {
+
+        List<Report> reportUser =  reportRepository.findByReportDateAndEmployee(report.getReportDate(),userDetail.getEmployee());
+
+        if(reportUser != null && id == report.getId()) {
+            for(Report report1 :reportUser) {
+                LocalDate reportDate = report1.getReportDate();
+                if(reportDate.equals(report.getReportDate())) {
+                    return ErrorKinds.DATECHECK_ERROR;
+                }
+            }
+        }
+
+        report.setDeleteFlg(false);
+        report.setReportDate(report.getReportDate());
+
+        Report beforeReport =reportRepository.findById(id).get();
+        report.setCreatedAt(beforeReport.getCreatedAt());
+
+        LocalDateTime now = LocalDateTime.now();
+        report.setUpdatedAt(now);
+        reportRepository.save(report);
+        return ErrorKinds.SUCCESS;
+    }
+
+
+
+
+
+
+
 
 
 

@@ -83,4 +83,9 @@ public class Report {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    public boolean isEmpty() {
+        // TODO 自動生成されたメソッド・スタブ
+        return false;
+    }
+
 }

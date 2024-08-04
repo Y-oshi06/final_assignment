@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,7 +15,10 @@ import org.springframework.stereotype.Service;
 
 import com.techacademy.constants.ErrorKinds;
 import com.techacademy.entity.Employee;
+import com.techacademy.entity.Report;
 import com.techacademy.repository.EmployeeRepository;
+import com.techacademy.repository.ReportRepository;
+
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -22,10 +26,12 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ReportService reportService ;
 
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder) {
+    public EmployeeService(EmployeeRepository employeeRepository,ReportService reportService, PasswordEncoder passwordEncoder) {
         this.employeeRepository = employeeRepository;
+        this.reportService = reportService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -66,6 +72,12 @@ public class EmployeeService {
         LocalDateTime now = LocalDateTime.now();
         employee.setUpdatedAt(now);
         employee.setDeleteFlg(true);
+
+        List<Report> reportList = reportService.findByEmployee(employee);
+        for (Report report : reportList) {
+            // 日報（report）のIDを指定して、日報情報を削除s
+            reportService.delete(report.getId());
+        }
 
         return ErrorKinds.SUCCESS;
     }

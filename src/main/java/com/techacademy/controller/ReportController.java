@@ -100,7 +100,7 @@ public class ReportController {
     @PostMapping(value = "/{id}/delete")
     public String delete(@PathVariable Integer id, @AuthenticationPrincipal UserDetail userDetail, Model model) {
 
-        ErrorKinds result = reportService.delete(id,userDetail);
+        ErrorKinds result = reportService.delete(id);
 
         if (ErrorMessage.contains(result)) {
             model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
@@ -115,12 +115,43 @@ public class ReportController {
     //日報更新
     @GetMapping(value = "/{id}/update")
     public String getReport(@PathVariable Integer id, Report report, @AuthenticationPrincipal UserDetail userDetail, Model model) {
-       // if(id != null) {
 
+        model.addAttribute("employeeName",userDetail.getEmployee().getName());
+        if(id != null) {
            model.addAttribute("report",reportService.findByCode(id));
-           model.addAttribute("userDetail",userDetail.getEmployee());
 
+        }else {
+            model.addAttribute("report",report);
+        }
         return "daily_report/daily.update";
+    }
+
+    @PostMapping(value = "/{id}/update")
+    public String PostReport(@Validated Report report, BindingResult res, Model model,@AuthenticationPrincipal UserDetail userDetail,@PathVariable Integer id) {
+        if(res.hasErrors()) {
+            return getReport(null,report,userDetail,model);
+        }
+
+        report.setEmployee(userDetail.getEmployee());
+
+
+        try {
+            ErrorKinds result = reportService.update(report,userDetail,id);
+
+            if (ErrorMessage.contains(result)) {
+                model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+                return getReport(id, report, userDetail, model);
+            }
+
+
+        }catch (DataIntegrityViolationException e) {
+            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
+                    ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
+            return getReport(null,report,userDetail,model);
+        }
+
+
+        return "redirect:/reports";
     }
 
 
