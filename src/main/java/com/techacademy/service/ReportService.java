@@ -89,7 +89,10 @@ public class ReportService {
 
         List<Report> reportUser =  reportRepository.findByReportDateAndEmployee(report.getReportDate(),userDetail.getEmployee());
 
-        if(reportUser != null && id == report.getId()) {
+        //更新前のレポート
+        Report reportBefore = reportRepository.findById(id).get();
+
+        if(reportUser != null && id == report.getId() && reportBefore.getReportDate() == report.getReportDate()) {
             for(Report report1 :reportUser) {
                 LocalDate reportDate = report1.getReportDate();
                 if(reportDate.equals(report.getReportDate())) {
